@@ -4,8 +4,8 @@ const urlsToCache = [
   "manifest.json",
   "icon.png",
   "icon512.png",
-  "script.js",
-  "style.css"
+  "script.js"
+  
 ];
 
 // Saat pertama kali install, simpan file ke cache

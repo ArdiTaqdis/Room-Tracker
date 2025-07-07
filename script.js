@@ -1,6 +1,6 @@
 // Tambahkan prefix CORS proxy
 const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwV6kRGG1g7IODG2opzVtzA_wy29DfE6pdyNMpjHm8ss9IR4pZoxloi2BXd0p8GmeHr/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbw__qw65RsRlDJdsp0JtDw6_2LFt2eVItCD2x74CUOpe10V_Uc160v_DD8NzmDC4Rar/exec';
 let lastNotifiedAt = null;
 // Fungsi fetch data reminder
 function fetchData() {
@@ -58,8 +58,6 @@ function triggerReminderNotification() {
     });
   }
 }
-
-
 
 
 // Fungsi kirim ke WhatsApp + update status

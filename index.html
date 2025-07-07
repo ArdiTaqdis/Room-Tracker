@@ -17,5 +17,14 @@
   <ul id="reminderList">Loading...</ul>
 
   <script src="script.js"></script>
+
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('✅ Service Worker registered'))
+      .catch(err => console.error('SW error:', err));
+  }
+</script>
+
 </body>
 </html>

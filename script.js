@@ -26,7 +26,7 @@ function renderReminders(data) {
     li.innerHTML = `
       <strong>Room ${item.room}</strong><br>
       ${escapeHTML(item.issue)}<br>
-      EXP: ${item.expDate}<br>
+      EXP: ${formatDate(item.expDate)}<br>
       <button onclick="sendToWA('${item.room}', '${item.nomorWA}', \`${item.issue}\`)">Kirim ke WA</button>
     `;
     list.appendChild(li);
@@ -74,6 +74,17 @@ function startNotificationLoop() {
     }
   });
 }
+
+// uBah format tanggal
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+}
+
 
 window.onload = () => {
   fetchData();

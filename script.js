@@ -1,8 +1,7 @@
-// Tambahkan prefix CORS proxy
 const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbw__qw65RsRlDJdsp0JtDw6_2LFt2eVItCD2x74CUOpe10V_Uc160v_DD8NzmDC4Rar/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxXbm9mdVwxGgMrNghA_BWfTfTyeCv7FIormXYLbxaOON2MHuh_vijtGTR3XZ0xNyrZ/exec';
 let lastNotifiedAt = null;
-// Fungsi fetch data reminder
+
 function fetchData() {
   fetch(CORS_PROXY + GAS_URL)
     .then(res => res.json())
@@ -10,7 +9,6 @@ function fetchData() {
     .catch(err => console.error('❌ Gagal ambil data:', err));
 }
 
-// Fungsi render list
 function renderReminders(data) {
   const list = document.getElementById('reminderList');
   list.innerHTML = '';
@@ -20,19 +18,23 @@ function renderReminders(data) {
     return;
   }
 
-  // Tampilkan list room
   data.forEach(item => {
     const li = document.createElement('li');
     li.innerHTML = `
       <strong>Room ${item.room}</strong><br>
       ${escapeHTML(item.issue)}<br>
       EXP: ${formatDate(item.expDate)}<br>
-      <button onclick="sendToWA('${item.room}', '${item.nomorWA}', \`${item.issue}\`)">Kirim ke WA</button>
     `;
+
+    if (!item.nomorWA) {
+      li.innerHTML += `<em style="color:red">❌ WA teknisi tidak ditemukan</em>`;
+    } else {
+      li.innerHTML += `<button onclick="sendToWA('${item.room}', '${item.nomorWA}', \`${item.issue}\`)">Kirim ke WA</button>`;
+    }
+
     list.appendChild(li);
   });
 
-  // ✅ Notifikasi hanya kalau ada data
   triggerReminderNotification();
 }
 
@@ -59,18 +61,10 @@ function triggerReminderNotification() {
   }
 }
 
-
-// Fungsi kirim ke WhatsApp + update status
 function sendToWA(room, nomor, pesan) {
-  if (!nomor) {
-    alert("❗ Nomor WA tidak ditemukan untuk teknisi ini.");
-    return;
-  }
-
   const msg = encodeURIComponent(`[Room ${room}]\n${pesan}`);
   window.open(`https://wa.me/${nomor}?text=${msg}`, '_blank');
 
-  // Update reminder status
   fetch(CORS_PROXY + GAS_URL + `?action=update&room=${room}`)
     .then(res => res.text())
     .then(msg => {
@@ -81,17 +75,12 @@ function sendToWA(room, nomor, pesan) {
     });
 }
 
-// Escape HTML agar aman
 function escapeHTML(str) {
   return str.replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
 }
 
-
-
-
-// uBah format tanggal
 function formatDate(dateStr) {
   const d = new Date(dateStr);
   return d.toLocaleDateString('id-ID', {
@@ -101,8 +90,7 @@ function formatDate(dateStr) {
   });
 }
 
-
 window.onload = () => {
   fetchData();
-  setInterval(fetchData, 10000); 
+  setInterval(fetchData, 60000); // setiap 1 menit refresh data
 };

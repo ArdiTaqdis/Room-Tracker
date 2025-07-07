@@ -70,7 +70,7 @@ function startNotificationLoop() {
         new Notification("🔔 Reminder RoomOO", {
           body: "Ada room yang mendekati EXP. Cek sekarang!",
         });
-      }, 3600000); // setiap jam
+      }, 10000); // setiap 10menit
     }
   });
 }

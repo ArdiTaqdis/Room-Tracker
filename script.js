@@ -1,9 +1,10 @@
+let lastNotifiedAt = null;
 
-const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+// Ganti ini dengan URL Apps Script Web App kamu (yang sudah Anyone & Anonymous)
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDdegVOWLSfdGWF_v79W6D49nT_6Kn10moh4oU6Q_aeT3yqqmZfVvYkEcxS25qO0_8/exec';
 
 function fetchData() {
-  fetch(CORS_PROXY + GAS_URL)
+  fetch(GAS_URL)
     .then(res => res.json())
     .then(data => renderReminders(data))
     .catch(err => console.error('❌ Gagal ambil data:', err));
@@ -35,25 +36,27 @@ function renderReminders(data) {
     list.appendChild(li);
   });
 
-  triggerReminderNotification();
+  triggerReminderNotification(data.length);
 }
 
-function triggerReminderNotification() {
+function triggerReminderNotification(jumlahData) {
   if (!("Notification" in window)) return;
 
   const now = Date.now();
-  if (lastNotifiedAt && now - lastNotifiedAt < 3600000) return;
+  if (lastNotifiedAt && now - lastNotifiedAt < 3600000) return; // hanya 1x per jam
 
   if (Notification.permission === "granted") {
-    new Notification("🔔 Reminder RoomOO", {
-      body: "Ada room yang EXP besok. Segera follow-up.",
-    });
-    lastNotifiedAt = now;
+    if (jumlahData > 0) {
+      new Notification("🔔 Reminder RoomOO", {
+        body: `Ada ${jumlahData} room EXP hari ini. Segera follow-up.`,
+      });
+      lastNotifiedAt = now;
+    }
   } else {
     Notification.requestPermission().then(permission => {
-      if (permission === "granted") {
+      if (permission === "granted" && jumlahData > 0) {
         new Notification("🔔 Reminder RoomOO", {
-          body: "Ada room yang EXP besok. Segera follow-up.",
+          body: `Ada ${jumlahData} room EXP hari ini. Segera follow-up.`,
         });
         lastNotifiedAt = now;
       }
@@ -65,7 +68,7 @@ function sendToWA(room, nomor, pesan) {
   const msg = encodeURIComponent(`[Room ${room}]\n${pesan}`);
   window.open(`https://wa.me/${nomor}?text=${msg}`, '_blank');
 
-  fetch(CORS_PROXY + GAS_URL + `?action=update&room=${room}`)
+  fetch(`${GAS_URL}?action=update&room=${room}`)
     .then(res => res.text())
     .then(msg => {
       console.log(msg);
@@ -92,5 +95,5 @@ function formatDate(dateStr) {
 
 window.onload = () => {
   fetchData();
-  setInterval(fetchData, 60000); // setiap 1 menit refresh data
+  setInterval(fetchData, 60000); // 1 menit
 };

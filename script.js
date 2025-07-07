@@ -1,10 +1,8 @@
-
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDdegVOWLSfdGWF_v79W6D49nT_6Kn10moh4oU6Q_aeT3yqqmZfVvYkEcxS25qO0_8/exec';
 let lastNotifiedAt = null;
 
 function fetchData() {
-  fetch(GAS_URL + `?action=update&room=${room}`)
-
+  fetch(GAS_URL)
     .then(res => {
       if (!res.ok) throw new Error("Network error " + res.status);
       return res.json();
@@ -17,7 +15,6 @@ function fetchData() {
     });
 }
 
-
 function renderReminders(data) {
   const list = document.getElementById('reminderList');
   list.innerHTML = '';
@@ -28,14 +25,14 @@ function renderReminders(data) {
   }
 
   data.forEach(item => {
-    const li = document.createElement('li');
     const tgl = formatDate(item.expDate);
     const pesan = `Room: ${item.room} | Task: ${item.issue}
-    Lokasi: ${item.lokasi}, Building: ${item.building}
-    Tanggal Expired: ${tgl}
-    Follow Up By: ${item.fuBy}
-    Harap segera diselesaikan.`;
+Lokasi: ${item.lokasi}, Building: ${item.building}
+Tanggal Expired: ${tgl}
+Follow Up By: ${item.fuBy}
+Harap segera diselesaikan.`;
 
+    const li = document.createElement('li');
     li.innerHTML = `
       <pre style="white-space: pre-wrap;">${escapeHTML(pesan)}</pre>
       ${item.nomorWA
@@ -53,7 +50,7 @@ function sendToWA(room, nomor, pesan) {
   const msg = encodeURIComponent(pesan);
   window.open(`https://wa.me/${nomor}?text=${msg}`, '_blank');
 
-  fetch(CORS_PROXY + GAS_URL + `?action=update&room=${room}`)
+  fetch(`${GAS_URL}?action=update&room=${room}`)
     .then(res => res.text())
     .then(msg => {
       console.log(msg);

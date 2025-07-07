@@ -30,10 +30,10 @@ function renderReminders(data) {
     const li = document.createElement('li');
     const tgl = formatDate(item.expDate);
     const pesan = `Room: ${item.room} | Task: ${item.issue}
-Lokasi: ${item.lokasi}, Building: ${item.building}
-Tanggal Expired: ${tgl}
-Follow Up By: ${item.fuBy}
-Harap segera diselesaikan.`;
+    Lokasi: ${item.lokasi}, Building: ${item.building}
+    Tanggal Expired: ${tgl}
+    Follow Up By: ${item.fuBy}
+    Harap segera diselesaikan.`;
 
     li.innerHTML = `
       <pre style="white-space: pre-wrap;">${escapeHTML(pesan)}</pre>

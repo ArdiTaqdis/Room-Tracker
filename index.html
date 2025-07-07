@@ -3,28 +3,118 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reminder RoomOO</title>
+  <title>🔔 Reminder RoomOO</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; padding: 1rem; }
-    button { padding: 8px 12px; margin-top: 4px; background: #0d6efd; color: white; border: none; border-radius: 4px; }
-    li { margin-bottom: 1rem; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #28a745;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    main {
+      flex: 1;
+      padding: 1rem;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    ul#reminderList {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #ffffff;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .reminder-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .reminder-date {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .reminder-date::before {
+      content: '⏰ ';
+      color: #ff5722;
+    }
+
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 12px;
+      color: #888;
+    }
   </style>
 </head>
 <body>
-  <h2>🔔 Reminder RoomOO</h2>
-  <ul id="reminderList">Loading...</ul>
+
+  <header>🔔 Reminder RoomOO</header>
+
+  <main>
+    <ul id="reminderList">
+      <!-- Contoh item jika belum ada JS -->
+      <li>
+        <div class="reminder-title">AC Kamar 102 - Perlu service</div>
+        <div class="reminder-date">10 Juli 2025</div>
+      </li>
+    </ul>
+  </main>
+
+  <footer>&copy; 2025 RoomOO | Sistem Monitoring Kamar</footer>
 
   <script src="script.js" defer></script>
-
   <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(() => console.log('✅ Service Worker registered'))
-      .catch(err => console.error('SW error:', err));
-  }
-</script>
-
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('✅ Service Worker registered'))
+        .catch(err => console.error('❌ SW error:', err));
+    }
+  </script>
 </body>
 </html>

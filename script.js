@@ -2,18 +2,31 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDdegVOWLSfdGWF_v79W6D
 let lastNotifiedAt = null;
 
 function fetchData() {
+  const list = document.getElementById('reminderList');
+
+  // Tampilkan indikator loading sementara
+  list.innerHTML = '<li>⏳ Memuat data...</li>';
+
   fetch(GAS_URL)
     .then(res => {
-      if (!res.ok) throw new Error("Network error " + res.status);
+      if (!res.ok) throw new Error("❌ Network error " + res.status);
       return res.json();
     })
-    .then(data => renderReminders(data))
+    .then(data => {
+      if (!Array.isArray(data)) throw new Error("❌ Format data tidak valid");
+      if (data.length === 0) {
+        list.innerHTML = '<li>Tidak ada reminder aktif.</li>';
+      } else {
+        renderReminders(data);
+        triggerReminderNotification();
+      }
+    })
     .catch(err => {
-      console.error('❌ Gagal ambil data:', err);
-      const list = document.getElementById('reminderList');
-      list.innerHTML = '<li style="color:red">Gagal memuat data. Cek console.</li>';
+      console.error(err);
+      list.innerHTML = '<li style="color:red">❌ Gagal memuat data. Silakan cek koneksi atau console.</li>';
     });
 }
+
 
 function renderReminders(data) {
   const list = document.getElementById('reminderList');
@@ -100,5 +113,11 @@ function formatDate(dateStr) {
 
 window.onload = () => {
   fetchData();
-  setInterval(fetchData, 10000); // refresh tiap 10 detik
+  setTimeout(() => {
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+  }, 3000);
+
+  setInterval(fetchData, 10000);
 };

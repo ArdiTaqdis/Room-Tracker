@@ -1,5 +1,5 @@
 const CACHE_VERSION = new Date().toISOString().slice(0, 10); // Versi harian
-const CACHE_NAME = `roomoo-v${CACHE_VERSION}`;
+const CACHE_NAME = `roomoo-v3${CACHE_VERSION}`;
 
 const urlsToCache = [
   "index.html",

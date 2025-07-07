@@ -1,6 +1,8 @@
 {
+  "id": "/",
   "name": "Reminder RoomOO",
   "short_name": "RoomOO",
+  "description": "Sistem monitoring dan pengingat tugas kamar RoomOO.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -18,5 +20,6 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }

@@ -1,4 +1,4 @@
-const CACHE_NAME = "roomoo-v5"; // Ganti versi saat update file
+const CACHE_NAME = "roomoo-v6"; // Ganti versi saat update file
 const urlsToCache = [
   "index.html",
   "script.js",

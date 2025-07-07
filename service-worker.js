@@ -1,50 +1,44 @@
-const CACHE_NAME = "roomoo-v1";
+const CACHE_VERSION = new Date().toISOString().slice(0, 10); // Versi harian
+const CACHE_NAME = `roomoo-v${CACHE_VERSION}`;
+
 const urlsToCache = [
   "index.html",
   "manifest.json",
   "icon.png",
   "icon512.png",
   "script.js"
-  
 ];
 
-// Saat pertama kali install, simpan file ke cache
 self.addEventListener("install", (event) => {
-  console.log("🔧 Service Worker: Installing...");
-
+  console.log(`🔧 Installing Service Worker: ${CACHE_NAME}`);
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log("📦 Caching files...");
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log("📦 Caching app shell...");
+      return cache.addAll(urlsToCache);
+    })
   );
 });
 
-// Aktifkan dan hapus cache lama jika ada
 self.addEventListener("activate", (event) => {
-  console.log("✅ Service Worker: Activated");
-
+  console.log("✅ Activating Service Worker...");
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
+    caches.keys().then((cacheNames) =>
+      Promise.all(
         cacheNames.map((name) => {
           if (name !== CACHE_NAME) {
             console.log("🧹 Deleting old cache:", name);
             return caches.delete(name);
           }
         })
-      );
-    })
+      )
+    )
   );
 });
 
-// Ambil file dari cache jika offline
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request)
-      .then((res) => {
-        return res || fetch(event.request);
-      })
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
+    })
   );
 });

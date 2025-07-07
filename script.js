@@ -117,7 +117,7 @@ window.onload = () => {
     if (Notification.permission !== "granted") {
       Notification.requestPermission();
     }
-  }, 3000);
+  }, 360000);
 
-  setInterval(fetchData, 10000);
+  setInterval(fetchData, 360000);
 };

@@ -1,9 +1,10 @@
-const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDdegVOWLSfdGWF_v79W6D49nT_6Kn10moh4oU6Q_aeT3yqqmZfVvYkEcxS25qO0_8/exec';
 let lastNotifiedAt = null;
 
 function fetchData() {
-  fetch(GAS_URL)
+  fetch(GAS_URL + `?action=update&room=${room}`)
+
     .then(res => {
       if (!res.ok) throw new Error("Network error " + res.status);
       return res.json();

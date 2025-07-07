@@ -1,7 +1,7 @@
 // Tambahkan prefix CORS proxy
 const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbwV6kRGG1g7IODG2opzVtzA_wy29DfE6pdyNMpjHm8ss9IR4pZoxloi2BXd0p8GmeHr/exec';
-
+let lastNotifiedAt = null;
 // Fungsi fetch data reminder
 function fetchData() {
   fetch(CORS_PROXY + GAS_URL)
@@ -39,14 +39,27 @@ function renderReminders(data) {
 function triggerReminderNotification() {
   if (!("Notification" in window)) return;
 
-  Notification.requestPermission().then(permission => {
-    if (permission === "granted") {
-      new Notification("🔔 Reminder RoomOO", {
-        body: "Ada room yang EXP besok. Segera follow-up.",
-      });
-    }
-  });
+  const now = Date.now();
+  if (lastNotifiedAt && now - lastNotifiedAt < 3600000) return;
+
+  if (Notification.permission === "granted") {
+    new Notification("🔔 Reminder RoomOO", {
+      body: "Ada room yang EXP besok. Segera follow-up.",
+    });
+    lastNotifiedAt = now;
+  } else {
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        new Notification("🔔 Reminder RoomOO", {
+          body: "Ada room yang EXP besok. Segera follow-up.",
+        });
+        lastNotifiedAt = now;
+      }
+    });
+  }
 }
+
+
 
 
 // Fungsi kirim ke WhatsApp + update status
@@ -77,19 +90,8 @@ function escapeHTML(str) {
             .replace(/>/g, "&gt;");
 }
 
-// Notifikasi lokal
-function startNotificationLoop() {
-  if (!("Notification" in window)) return;
-  Notification.requestPermission().then(permission => {
-    if (permission === "granted") {
-      setInterval(() => {
-        new Notification("🔔 Reminder RoomOO", {
-          body: "Ada room yang mendekati EXP. Cek sekarang!",
-        });
-      }, 10000); // setiap 10menit
-    }
-  });
-}
+
+
 
 // uBah format tanggal
 function formatDate(dateStr) {
@@ -104,5 +106,5 @@ function formatDate(dateStr) {
 
 window.onload = () => {
   fetchData();
-  
+  setInterval(fetchData, 10000); 
 };

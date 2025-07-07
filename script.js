@@ -13,14 +13,14 @@ function fetchData() {
 // Fungsi render list
 function renderReminders(data) {
   const list = document.getElementById('reminderList');
-  list.innerHTML = '<li>⏳ Mengambil data...</li>';
+  list.innerHTML = '';
 
   if (data.length === 0) {
-    list.innerHTML = '<li>✅ Tidak ada item EXP dalam waktu dekat.</li>';
+    list.innerHTML = '<li>Tidak ada item EXP dalam waktu dekat.</li>';
     return;
   }
 
-  list.innerHTML = ''; // Kosongkan setelah loading
+  // Tampilkan list room
   data.forEach(item => {
     const li = document.createElement('li');
     li.innerHTML = `
@@ -31,7 +31,23 @@ function renderReminders(data) {
     `;
     list.appendChild(li);
   });
+
+  // ✅ Notifikasi hanya kalau ada data
+  triggerReminderNotification();
 }
+
+function triggerReminderNotification() {
+  if (!("Notification" in window)) return;
+
+  Notification.requestPermission().then(permission => {
+    if (permission === "granted") {
+      new Notification("🔔 Reminder RoomOO", {
+        body: "Ada room yang EXP besok. Segera follow-up.",
+      });
+    }
+  });
+}
+
 
 // Fungsi kirim ke WhatsApp + update status
 function sendToWA(room, nomor, pesan) {
@@ -88,5 +104,5 @@ function formatDate(dateStr) {
 
 window.onload = () => {
   fetchData();
-  startNotificationLoop();
+  
 };

@@ -3,11 +3,19 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDdegVOWLSfdGWF_v79W6D
 let lastNotifiedAt = null;
 
 function fetchData() {
-  fetch(CORS_PROXY + GAS_URL)
-    .then(res => res.json())
+  fetch(GAS_URL)
+    .then(res => {
+      if (!res.ok) throw new Error("Network error " + res.status);
+      return res.json();
+    })
     .then(data => renderReminders(data))
-    .catch(err => console.error('❌ Gagal ambil data:', err));
+    .catch(err => {
+      console.error('❌ Gagal ambil data:', err);
+      const list = document.getElementById('reminderList');
+      list.innerHTML = '<li style="color:red">Gagal memuat data. Cek console.</li>';
+    });
 }
+
 
 function renderReminders(data) {
   const list = document.getElementById('reminderList');

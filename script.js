@@ -1,9 +1,8 @@
-const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxXbm9mdVwxGgMrNghA_BWfTfTyeCv7FIormXYLbxaOON2MHuh_vijtGTR3XZ0xNyrZ/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwV6kRGG1g7IODG2opzVtzA_wy29DfE6pdyNMpjHm8ss9IR4pZoxloi2BXd0p8GmeHr/exec';
 let lastNotifiedAt = null;
 
 function fetchData() {
-  fetch(CORS_PROXY + GAS_URL)
+  fetch(GAS_URL)
     .then(res => res.json())
     .then(data => renderReminders(data))
     .catch(err => console.error('❌ Gagal ambil data:', err));
@@ -65,7 +64,7 @@ function sendToWA(room, nomor, pesan) {
   const msg = encodeURIComponent(`[Room ${room}]\n${pesan}`);
   window.open(`https://wa.me/${nomor}?text=${msg}`, '_blank');
 
-  fetch(CORS_PROXY + GAS_URL + `?action=update&room=${room}`)
+  fetch(GAS_URL + `?action=update&room=${room}`)
     .then(res => res.text())
     .then(msg => {
       console.log(msg);
@@ -92,5 +91,5 @@ function formatDate(dateStr) {
 
 window.onload = () => {
   fetchData();
-  setInterval(fetchData, 60000); // setiap 1 menit refresh data
+  setInterval(fetchData, 60000); // refresh setiap 1 menit
 };

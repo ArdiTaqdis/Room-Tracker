@@ -1,4 +1,4 @@
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwV6kRGG1g7IODG2opzVtzA_wy29DfE6pdyNMpjHm8ss9IR4pZoxloi2BXd0p8GmeHr/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyDPYUDsVJULvaCzUX897nrfyHrFOf-3oSxQmvI654jwsyOqr1MAK_x0p4HXtdvX58R/exec';
 let lastNotifiedAt = null;
 
 function fetchData() {
@@ -91,5 +91,5 @@ function formatDate(dateStr) {
 
 window.onload = () => {
   fetchData();
-  setInterval(fetchData, 60000); // refresh setiap 1 menit
+  setInterval(fetchData, 10000); // refresh setiap 1 menit
 };
